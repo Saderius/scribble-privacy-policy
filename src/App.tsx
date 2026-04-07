@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo, useMemo } from 'react';
 import { motion } from 'motion/react';
 import fm from 'front-matter';
 import Markdown from 'react-markdown';
+
+// Helper to resolve asset paths for GitHub Pages
+const resolveAsset = (path: string) => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 interface SectionData {
   id: string;
@@ -13,6 +19,26 @@ interface SectionData {
   content: string;
 }
 
+// 7. Memoize background to prevent re-renders on state changes
+const BackgroundElements = memo(() => {
+  return (
+    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+      {/* Animated Background Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-300/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
+      <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-300/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-2000"></div>
+      <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-green-200/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-4000"></div>
+      <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-yellow-200/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
+      
+      {/* 2. Stabilize Asset Paths with resolveAsset */}
+      <motion.img src={resolveAsset("/scribble_20260304_161702278.png")} alt="" className="absolute top-[5%] left-[5%] w-48 md:w-64 opacity-15 mix-blend-multiply" animate={{ y: [0, -40, 0], x: [0, 20, 0], rotate: [-10, 15, -10], scale: [1, 1.15, 1] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
+      <motion.img src={resolveAsset("/sketch_1772191709150.png")} alt="" className="absolute top-[15%] right-[2%] w-56 md:w-72 opacity-15 mix-blend-multiply" animate={{ y: [0, 50, 0], x: [0, -30, 0], rotate: [15, -20, 15], scale: [0.9, 1.2, 0.9] }} transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }} />
+      <motion.img src={resolveAsset("/scribble_1773745917428.png")} alt="" className="absolute top-[45%] left-[-5%] w-40 md:w-56 opacity-15 mix-blend-multiply" animate={{ y: [0, -35, 0], x: [0, -25, 0], rotate: [-20, 10, -20], scale: [1, 1.25, 1] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
+      <motion.img src={resolveAsset("/scribble_20260307_184846075.png")} alt="" className="absolute bottom-[10%] right-[5%] w-64 md:w-80 opacity-15 mix-blend-multiply" animate={{ y: [0, -50, 0], x: [0, 40, 0], rotate: [0, 25, 0], scale: [0.85, 1.15, 0.85] }} transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut" }} />
+      <motion.img src={resolveAsset("/sketch_1772458799045.png")} alt="" className="absolute bottom-[5%] left-[15%] w-48 md:w-64 opacity-15 mix-blend-multiply" animate={{ y: [0, 45, 0], x: [0, 20, 0], rotate: [10, -25, 10], scale: [1.1, 0.9, 1.1] }} transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }} />
+    </div>
+  );
+});
+
 export default function App() {
   const [mounted, setMounted] = useState(false);
   const [sections, setSections] = useState<SectionData[]>([]);
@@ -20,19 +46,20 @@ export default function App() {
   useEffect(() => {
     setMounted(true);
     
+    // 1. Eliminate Waterfalls by using Promise.all()
     const loadContent = async () => {
-      // Load all markdown files from the content directory
       const modules = import.meta.glob('/src/content/*.md', { query: '?raw', import: 'default' });
-      const loadedSections: SectionData[] = [];
       
-      for (const path in modules) {
-        const rawContent = await modules[path]() as string;
-        const parsed = fm(rawContent);
-        loadedSections.push({
-          ...(parsed.attributes as any),
-          content: parsed.body
-        });
-      }
+      const loadedSections = await Promise.all(
+        Object.entries(modules).map(async ([path, loader]) => {
+          const rawContent = await loader() as string;
+          const parsed = fm(rawContent);
+          return {
+            ...(parsed.attributes as any),
+            content: parsed.body
+          } as SectionData;
+        })
+      );
       
       // Sort by the 'order' frontmatter property
       loadedSections.sort((a, b) => a.order - b.order);
@@ -46,20 +73,7 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen overflow-hidden font-sans text-m3-sys-light-on-surface">
-      {/* Animated Background Blobs */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-300/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-300/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-green-200/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-4000"></div>
-        <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-yellow-200/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
-        
-        {/* Sketches Peeking Through */}
-        <motion.img src="/scribble_20260304_161702278.png" alt="" className="absolute top-[5%] left-[5%] w-48 md:w-64 opacity-15 mix-blend-multiply" animate={{ y: [0, -40, 0], x: [0, 20, 0], rotate: [-10, 15, -10], scale: [1, 1.15, 1] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.img src="/sketch_1772191709150.png" alt="" className="absolute top-[15%] right-[2%] w-56 md:w-72 opacity-15 mix-blend-multiply" animate={{ y: [0, 50, 0], x: [0, -30, 0], rotate: [15, -20, 15], scale: [0.9, 1.2, 0.9] }} transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.img src="/scribble_1773745917428.png" alt="" className="absolute top-[45%] left-[-5%] w-40 md:w-56 opacity-15 mix-blend-multiply" animate={{ y: [0, -35, 0], x: [0, -25, 0], rotate: [-20, 10, -20], scale: [1, 1.25, 1] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.img src="/scribble_20260307_184846075.png" alt="" className="absolute bottom-[10%] right-[5%] w-64 md:w-80 opacity-15 mix-blend-multiply" animate={{ y: [0, -50, 0], x: [0, 40, 0], rotate: [0, 25, 0], scale: [0.85, 1.15, 0.85] }} transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.img src="/sketch_1772458799045.png" alt="" className="absolute bottom-[5%] left-[15%] w-48 md:w-64 opacity-15 mix-blend-multiply" animate={{ y: [0, 45, 0], x: [0, 20, 0], rotate: [10, -25, 10], scale: [1.1, 0.9, 1.1] }} transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }} />
-      </div>
+      <BackgroundElements />
 
       {/* Main Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
@@ -76,7 +90,7 @@ export default function App() {
             <div className="absolute inset-0 bg-blue-400/30 blur-3xl rounded-full transform group-hover:scale-125 transition-transform duration-700"></div>
             <a href="https://play.google.com/store/apps/details?id=com.twentyminCode.scribble" target="_blank" rel="noopener noreferrer" className="relative block w-32 h-32 sm:w-48 sm:h-48 hover:scale-105 hover:-translate-y-2 transition-all duration-300 z-10">
               
-              {/* 1. Yellow Background Fill (Clipped to icon shape) */}
+              {/* 1. Yellow Background Fill */}
               <div className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] overflow-hidden z-0">
                 <motion.div 
                   className="absolute inset-0 bg-[#fbef9d]"
@@ -86,7 +100,7 @@ export default function App() {
                 />
               </div>
 
-              {/* 2. Shape and Wave (Unclipped, can slide from outside) */}
+              {/* 2. Shape and Wave (Unclipped) */}
               <motion.div 
                 className="absolute inset-0 z-10 pointer-events-none"
                 initial={{ y: 0, opacity: 1 }}
@@ -98,7 +112,7 @@ export default function App() {
               >
                 {/* Shape */}
                 <motion.img 
-                  src="/app-icon-fglayer-v2-shape.png" 
+                  src={resolveAsset("/app-icon-fglayer-v2-shape.png")}
                   className="absolute inset-0 w-full h-full object-cover"
                   style={{ originX: 0.2, originY: 0.5 }}
                   initial={{ x: -120, y: 140, opacity: 0, rotate: -20 }}
@@ -116,7 +130,7 @@ export default function App() {
                 />
                 {/* Wave */}
                 <motion.img 
-                  src="/app-icon-fglayer-v2-wave.png" 
+                  src={resolveAsset("/app-icon-fglayer-v2-wave.png")}
                   className="absolute inset-0 w-full h-full object-cover"
                   initial={{ clipPath: "circle(0% at 20% 50%)" }}
                   animate={{ clipPath: "circle(150% at 20% 50%)" }}
@@ -124,18 +138,18 @@ export default function App() {
                 />
               </motion.div>
 
-              {/* 3. Clipped Shape and Wave (Seamless handoff at 3.3s to clip corners) */}
+              {/* 3. Clipped Shape and Wave */}
               <motion.div 
                 className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] overflow-hidden z-15 pointer-events-none"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 3.3, duration: 0.01 }}
               >
-                <img src="/app-icon-fglayer-v2-shape.png" className="absolute inset-0 w-full h-full object-cover" alt="" />
-                <img src="/app-icon-fglayer-v2-wave.png" className="absolute inset-0 w-full h-full object-cover" alt="" />
+                <img src={resolveAsset("/app-icon-fglayer-v2-shape.png")} className="absolute inset-0 w-full h-full object-cover" alt="" />
+                <img src={resolveAsset("/app-icon-fglayer-v2-wave.png")} className="absolute inset-0 w-full h-full object-cover" alt="" />
               </motion.div>
 
-              {/* 4. Enclosing Border (Scales in) */}
+              {/* 4. Enclosing Border */}
               <motion.div 
                 className="absolute inset-0 rounded-[2rem] sm:rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-4 border-white/60 z-20 pointer-events-none"
                 initial={{ opacity: 0, scale: 1.2 }}
@@ -145,19 +159,16 @@ export default function App() {
                   scale: { delay: 3.3, duration: 0.3, type: "spring", stiffness: 200 } 
                 }}
               />
-
             </a>
           </div>
 
           <div className="relative inline-flex items-center justify-center px-8 py-3 mb-6">
-            {/* Glass panel background */}
             <motion.div 
               className="absolute inset-0 rounded-full glass-panel shadow-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 3.3, duration: 0.4, type: "spring", stiffness: 200 }}
             />
-            {/* Text */}
             <motion.h1 
               className="relative z-10 text-5xl sm:text-6xl tracking-tight text-center"
               initial={{ color: "#3333ff", fontWeight: 400, clipPath: "inset(0 100% 0 0)" }}
