@@ -173,7 +173,7 @@ export default function App() {
               className="relative z-10 text-5xl sm:text-6xl tracking-tight text-center"
               initial={{ color: "#3333ff", fontWeight: 400, clipPath: "inset(0 100% 0 0)" }}
               animate={{ 
-                color: ["#3333ff", "#3333ff", "#000000"],
+                color: ["#3333ff", "#3333ff", "var(--app-title-final)"],
                 fontWeight: [400, 400, 700],
                 clipPath: ["inset(0 100% 0 0)", "inset(0 100% 0 0)", "inset(0 0% 0 0)", "inset(0 0% 0 0)"]
               }}

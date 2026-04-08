@@ -74,6 +74,50 @@
   }
 }
 
+:root {
+  /* Used by the title animation in `src/App.tsx`. */
+  --app-title-final: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    /* Readability-only overrides: keep accent hues, swap surfaces + text. */
+    --color-m3-sys-light-surface: #1a1814;
+    --color-m3-sys-light-on-surface: #f5f0e8;
+    --color-m3-sys-light-surface-variant: #2b2721;
+    --color-m3-sys-light-on-surface-variant: #a89f8c;
+    --color-m3-sys-light-outline: #8a7f71;
+
+    --app-title-final: var(--color-m3-sys-light-on-surface);
+  }
+
+  body {
+    background-color: var(--color-m3-sys-light-surface);
+    color: var(--color-m3-sys-light-on-surface);
+  }
+
+  /* Glass effects: tune for dark surfaces. */
+  .glass-panel {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.07);
+  }
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.45), 0 1px 3px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.08), inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-card:hover {
+    box-shadow: 0 14px 40px -10px rgba(0, 0, 0, 0.6), 0 6px 10px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.12), inset 0 -1px 1px rgba(0, 0, 0, 0.12);
+  }
+}
+
 /* Custom animations for the background blobs */
 @keyframes blob {
   0% { transform: translate(0px, 0px) scale(1); }
