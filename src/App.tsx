@@ -190,7 +190,7 @@ export default function App() {
             Your Privacy, Drawn Clearly
           </h2>
           <p className="text-lg text-m3-sys-light-outline max-w-2xl mx-auto">
-            Last updated: April 2026
+            Last updated: April 9, 2026
           </p>
         </motion.header>
 
