@@ -23,12 +23,6 @@ interface SectionData {
 const BackgroundElements = memo(() => {
   return (
     <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-      {/* Animated Background Blobs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-300/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
-      <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-300/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-2000"></div>
-      <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-green-200/40 mix-blend-multiply filter blur-[80px] animate-blob animation-delay-4000"></div>
-      <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-yellow-200/40 mix-blend-multiply filter blur-[80px] animate-blob"></div>
-      
       {/* 2. Stabilize Asset Paths with resolveAsset */}
       <motion.img src={resolveAsset("/scribble_20260304_161702278.png")} alt="" className="absolute top-[5%] left-[5%] w-48 md:w-64 opacity-15 mix-blend-multiply" animate={{ y: [0, -40, 0], x: [0, 20, 0], rotate: [-10, 15, -10], scale: [1, 1.15, 1] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
       <motion.img src={resolveAsset("/sketch_1772191709150.png")} alt="" className="absolute top-[15%] right-[2%] w-56 md:w-72 opacity-15 mix-blend-multiply" animate={{ y: [0, 50, 0], x: [0, -30, 0], rotate: [15, -20, 15], scale: [0.9, 1.2, 0.9] }} transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut" }} />
@@ -171,9 +165,9 @@ export default function App() {
             />
             <motion.h1 
               className="relative z-10 text-5xl sm:text-6xl tracking-tight text-center"
-              initial={{ color: "#3333ff", fontWeight: 400, clipPath: "inset(0 100% 0 0)" }}
+              initial={{ color: "var(--app-title-initial)", fontWeight: 400, clipPath: "inset(0 100% 0 0)" }}
               animate={{ 
-                color: ["#3333ff", "#3333ff", "var(--app-title-final)"],
+                color: ["var(--app-title-initial)", "var(--app-title-initial)", "var(--app-title-final)"],
                 fontWeight: [400, 400, 700],
                 clipPath: ["inset(0 100% 0 0)", "inset(0 100% 0 0)", "inset(0 0% 0 0)", "inset(0 0% 0 0)"]
               }}
@@ -240,23 +234,23 @@ export default function App() {
             Connect With Us
           </h3>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="mailto:20minCode@gmail.com" className="inline-flex items-center px-5 py-3 rounded-full bg-white/60 hover:bg-white/80 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
+            <a href="mailto:20minCode@gmail.com" className="inline-flex items-center px-5 py-3 rounded-full bg-m3-sys-light-on-surface/10 hover:bg-m3-sys-light-on-surface/15 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
               <span className="material-symbols-rounded mr-2 text-blue-600">mail</span>
               Email Us
             </a>
-            <a href="https://www.reddit.com/r/20minCode/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-white/60 hover:bg-white/80 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
+            <a href="https://www.reddit.com/r/20minCode/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-m3-sys-light-on-surface/10 hover:bg-m3-sys-light-on-surface/15 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
               <span className="material-symbols-rounded mr-2 text-orange-600">forum</span>
               r/20minCode
             </a>
-            <a href="https://www.reddit.com/r/scribbleapp/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-white/60 hover:bg-white/80 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
+            <a href="https://www.reddit.com/r/scribbleapp/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-m3-sys-light-on-surface/10 hover:bg-m3-sys-light-on-surface/15 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
               <span className="material-symbols-rounded mr-2 text-orange-500">forum</span>
               r/scribbleapp
             </a>
-            <a href="https://discord.gg/cgS6WhQAXC" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-white/60 hover:bg-white/80 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
+            <a href="https://discord.gg/cgS6WhQAXC" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-m3-sys-light-on-surface/10 hover:bg-m3-sys-light-on-surface/15 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
               <span className="material-symbols-rounded mr-2 text-indigo-600">chat</span>
               Discord
             </a>
-            <a href="https://www.facebook.com/scribblewear/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-white/60 hover:bg-white/80 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
+            <a href="https://www.facebook.com/scribblewear/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-5 py-3 rounded-full bg-m3-sys-light-on-surface/10 hover:bg-m3-sys-light-on-surface/15 transition-colors text-m3-sys-light-on-surface font-medium shadow-sm">
               <span className="material-symbols-rounded mr-2 text-blue-700">thumb_up</span>
               Facebook
             </a>

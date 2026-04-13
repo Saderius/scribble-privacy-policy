@@ -76,6 +76,7 @@
 
 :root {
   /* Used by the title animation in `src/App.tsx`. */
+  --app-title-initial: #3333ff;
   --app-title-final: #000000;
 }
 
@@ -84,12 +85,13 @@
     color-scheme: dark;
 
     /* Readability-only overrides: keep accent hues, swap surfaces + text. */
-    --color-m3-sys-light-surface: #1a1814;
+    --color-m3-sys-light-surface: #00121a;
     --color-m3-sys-light-on-surface: #f5f0e8;
-    --color-m3-sys-light-surface-variant: #2b2721;
-    --color-m3-sys-light-on-surface-variant: #a89f8c;
+    --color-m3-sys-light-surface-variant: #3e3a33;
+    --color-m3-sys-light-on-surface-variant: #d4cdc1;
     --color-m3-sys-light-outline: #8a7f71;
 
+    --app-title-initial: #82b1ff;
     --app-title-final: var(--color-m3-sys-light-on-surface);
   }
 
