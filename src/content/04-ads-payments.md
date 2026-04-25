@@ -7,4 +7,6 @@ bg: bg-purple-100/50
 order: 4
 ---
 
-Scribble is a tool for creation, and it's important that development remains sustainable. While the app **currently does not include ads or payments**, we may include non-intrusive advertisements or one-time premium features in the future. We explicitly promise that **we will never sell your personal data** to third parties or advertisers. Any future payments will be handled securely through the Google Play Store.
+Scribble uses advertisements and premium features to support its continued development. We use **Google AdMob** to display non-intrusive ads and **Google Play Billing** for one-time premium purchases. 
+
+We explicitly promise that **we will never sell your personal data** to third parties or advertisers. All payment transactions are handled securely by Google, and Scribble never sees or stores your financial information. AdMob may use device identifiers to provide advertising services and technical performance analysis.
